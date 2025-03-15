@@ -1,4 +1,5 @@
-﻿using System;
+﻿using package_manager.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,6 +76,28 @@ namespace package_manager.UserInterface
 
                 Console.WriteLine(InvalidComunicate);
             }
+        }
+
+        public static Order CollectOrder()
+        {
+            string productName = InputService.GetInput("Product name: ");
+            decimal total = InputService.GetDecimalInput("Total price: ");
+            CustomerTypeEnum customerType = InputService.GetEnumInput<CustomerTypeEnum>("Client type: ");
+            PaymentMethodEnum paymentMethod = InputService.GetEnumInput<PaymentMethodEnum>("Payment method: ");
+            DeliveryMethodEnum delivery = InputService.GetEnumInput<DeliveryMethodEnum>("Delivery method: ");
+            string address = InputService.GetInput("Delivery address: ");
+
+            return new Order()
+            {
+                CustomerType = new CustomerType(customerType),
+                PaymentMethod = new PaymentMethod(paymentMethod),
+                ProductName = productName,
+                Price = total,
+                DeliveryAddr = address,
+                OrderDate = DateTime.Now,
+                DeliveryMethod = new DeliveryMethod(delivery),
+                OrderStatus = new OrderStatus(OrderStatusEnum.New)
+            };
         }
     }
 }
