@@ -10,7 +10,6 @@ namespace package_manager.Models
     {
         Card,
         Cash,
-        Blik,
     }
 
     public class PaymentMethod

@@ -20,8 +20,8 @@ class Program
             { 2, new StoreView(orderService) },
             { 3, new OrdersViewer(orderService, dividerLen) },
             { 4, new SendPackageView(orderService) },
+            { 5, new FilterPackagesView(orderService, dividerLen) }
         };
-        Console.WriteLine("Hello, World!");
 
         Console.WriteLine($"Database path: {db.DbPath}.");
 
@@ -36,11 +36,12 @@ class Program
             Console.WriteLine("2. Send to magazine");
             Console.WriteLine("3. View orders");
             Console.WriteLine("4. Send package");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Find package");
+            Console.WriteLine("6. Exit");
 
-            int choice = InputService.GetIntInput("Wybierz opcję: ");
+            int choice = InputService.GetIntInput("Choose option: ");
 
-            if (choice == 5)
+            if (choice == 6)
             {
                 break;
             }

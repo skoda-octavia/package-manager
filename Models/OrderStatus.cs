@@ -14,7 +14,6 @@ namespace package_manager.Models
         Returned,
         Invalid,
         Closed,
-        InShipping
     }
 
     public class OrderStatus

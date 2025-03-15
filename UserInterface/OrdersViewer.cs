@@ -13,7 +13,7 @@ namespace package_manager.UserInterface
 {
     public class OrdersViewer : CommandHandler
     {
-        readonly string Divider;
+        private readonly string Divider;
 
         public OrdersViewer(OrderService orderService, int dividerLen) : base(orderService)
         {

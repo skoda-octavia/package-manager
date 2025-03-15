@@ -99,5 +99,57 @@ namespace package_manager.UserInterface
                 OrderStatus = new OrderStatus(OrderStatusEnum.New)
             };
         }
+
+        public static string? GetFilterValue(string prompt)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input;
+        }
+
+        public static DateTime? GetDateFilter(string prompt)
+        {
+            Console.Write(prompt);
+            if (DateTime.TryParse(Console.ReadLine(), out var date))
+            {
+                return date;
+            }
+            return null;
+        }
+
+        public static decimal? GetDecimalFilter(string prompt)
+        {
+            Console.Write(prompt);
+            if (decimal.TryParse(Console.ReadLine(), out var value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        public static int? GetIntFilter(string prompt)
+        {
+            Console.Write(prompt);
+            if (int.TryParse(Console.ReadLine(), out var value))
+            {
+                return value;
+            }
+            return null;
+        }
+
+        public static T? GetEnumFilter<T>(string prompt) where T : struct, Enum
+        {
+            Console.Write(prompt);
+            foreach (var value in Enum.GetValues(typeof(T)))
+            {
+                Console.WriteLine($"* {value}");
+            }
+            var input = Console.ReadLine();
+            if (Enum.TryParse<T>(input, true, out var result))
+            {
+                return result;
+            }
+            return null;
+        }
     }
 }

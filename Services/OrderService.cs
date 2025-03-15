@@ -16,9 +16,9 @@ namespace package_manager.Services
 
         private decimal MaxCashPayment = 2500;
 
-        private Dictionary<DeliveryMethodEnum, DeliveryService> deliveryServices; 
+        private Dictionary<DeliveryMethodEnum, DeliveryService> deliveryServices;
 
-        public OrderService(AppDbContext appDbContext) 
+        public OrderService(AppDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
             deliveryServices = new Dictionary<DeliveryMethodEnum, DeliveryService>
@@ -80,9 +80,6 @@ namespace package_manager.Services
             if (order.OrderStatus.Id == OrderStatusEnum.InStock
                 && deliveryServices.TryGetValue(order.DeliveryMethod.Id, out DeliveryService? deliveryService))
             {
-                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.InShipping);
-                appDbContext.Orders.Update(order);
-                appDbContext.SaveChangesAsync();
                 answer = "Package is in shipping.";
                 Task.Run(async () =>
                 {
@@ -101,6 +98,26 @@ namespace package_manager.Services
             order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Sent);
             appDbContext.Orders.Update(order);
             appDbContext.SaveChangesAsync();
+        }
+
+        public List<Order> FilterOrders(
+            string? productName = null,
+            DateTime? orderDate = null,
+            decimal? price = null,
+            int? orderId = null,
+            OrderStatusEnum? status = null,
+            PaymentMethodEnum? paymentMethod = null)
+        {
+            IQueryable<Order> query = appDbContext.Orders;
+
+            if (!string.IsNullOrEmpty(productName)) { query = query.Where(o => o.ProductName.Contains(productName)); }
+            if (orderDate.HasValue) { query = query.Where(o => o.OrderDate.Value.Date == orderDate.Value.Date); }
+            if (price.HasValue) { query = query.Where(o => o.Price == price.Value); }
+            if (orderId.HasValue) { query = query.Where(o => o.Id == orderId.Value); }
+            if (status.HasValue) { query = query.Where(o => o.OrderStatus.Id == status.Value); }
+            if (paymentMethod.HasValue) { query = query.Where(o => o.PaymentMethod.Id == paymentMethod.Value); }
+
+            return query.ToList();
         }
     }
 }
