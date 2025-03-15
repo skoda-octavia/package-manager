@@ -10,34 +10,19 @@ namespace package_manager.UserInterface
 {
     public class StoreView : CommandHandler
     {
-        private OrderService orderService;
+        public StoreView(OrderService orderService) : base(orderService) { }
 
-        public StoreView(OrderService orderService) 
+        public override void HandleCommand()
         {
-            this.orderService = orderService;
-        }
-
-        public void HandleCommand()
-        {
-            Order? order = null;
-            do
+            Order? order = GetOrderByUserInput();
+            if (order == null)
             {
-                string input = InputService.GetInput("Enter package Id or [exit] to abort: ");
-                if (input == "exit")
-                {
-                    return;
-                }
-                if (int.TryParse(input, out int result))
-                {
-                    order = orderService.GetOrderById(result);
-                }
-            } while (order == null);
+                return;
+            }
 
-            if (order.OrderStatus.Id == OrderStatusEnum.InStock
-                || order.OrderStatus.Id == OrderStatusEnum.Closed
-                || order.OrderStatus.Id == OrderStatusEnum.Invalid) 
+            if (order.OrderStatus.Id == OrderStatusEnum.Sent) 
             {
-                Console.WriteLine("Invalid order status: " +  order.OrderStatus.Name);
+                Console.WriteLine("Package already sent.");
                 return;
             }
             Console.WriteLine(orderService.StoreOrder(order));

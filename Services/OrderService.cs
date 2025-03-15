@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using package_manager.Data;
 using package_manager.Models;
+using package_manager.Services.DeliveryServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,16 @@ namespace package_manager.Services
 
         private decimal MaxCashPayment = 2500;
 
+        private Dictionary<DeliveryMethodEnum, DeliveryService> deliveryServices; 
+
         public OrderService(AppDbContext appDbContext) 
         {
             this.appDbContext = appDbContext;
+            deliveryServices = new Dictionary<DeliveryMethodEnum, DeliveryService>
+            {
+                {DeliveryMethodEnum.HomeDelivery, new HomeDeliveryService(this) },
+                {DeliveryMethodEnum.Locker, new LockerDeliveryService(this) },
+            };
         }
 
         private void AttachEnumInstances(Order order)
@@ -63,6 +71,36 @@ namespace package_manager.Services
             appDbContext.Orders.Update(order);
             appDbContext.SaveChangesAsync();
             return answer;
+        }
+
+        public string PlaceInShipping(Order order)
+        {
+            string answer;
+
+            if (order.OrderStatus.Id == OrderStatusEnum.InStock
+                && deliveryServices.TryGetValue(order.DeliveryMethod.Id, out DeliveryService? deliveryService))
+            {
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.InShipping);
+                appDbContext.Orders.Update(order);
+                appDbContext.SaveChangesAsync();
+                answer = "Package is in shipping.";
+                Task.Run(async () =>
+                {
+                    await deliveryService.HandleDelivery(order);
+                });
+            }
+            else
+            {
+                answer = "Invalid order status or delivery service.";
+            }
+            return answer;
+        }
+
+        public void MarkSent(Order order)
+        {
+            order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Sent);
+            appDbContext.Orders.Update(order);
+            appDbContext.SaveChangesAsync();
         }
     }
 }

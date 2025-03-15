@@ -13,7 +13,8 @@ namespace package_manager.Models
         Sent,
         Returned,
         Invalid,
-        Closed
+        Closed,
+        InShipping
     }
 
     public class OrderStatus

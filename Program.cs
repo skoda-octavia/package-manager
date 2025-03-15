@@ -18,7 +18,8 @@ class Program
         {
             { 1, new CreateOrderView(orderService) },
             { 2, new StoreView(orderService) },
-            { 3, new OrdersViewer(orderService, dividerLen) }
+            { 3, new OrdersViewer(orderService, dividerLen) },
+            { 4, new SendPackageView(orderService) },
         };
         Console.WriteLine("Hello, World!");
 
@@ -34,11 +35,12 @@ class Program
             Console.WriteLine("1. Create order");
             Console.WriteLine("2. Send to magazine");
             Console.WriteLine("3. View orders");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Send package");
+            Console.WriteLine("5. Exit");
 
             int choice = InputService.GetIntInput("Wybierz opcję: ");
 
-            if (choice == 4)
+            if (choice == 5)
             {
                 break;
             }
