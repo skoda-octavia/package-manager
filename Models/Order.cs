@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,9 @@ namespace package_manager.Models
         public OrderStatus OrderStatus { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public decimal Price { get; set; }
+        [MaxLength(64)]
         public string ProductName { get; set; }
+        [MaxLength(64)]
         public string? DeliveryAddr { get; set; }
         public DateTime OrderDate { get; set; }
 

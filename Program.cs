@@ -20,7 +20,8 @@ class Program
             { 2, new StoreView(orderService) },
             { 3, new OrdersViewer(orderService, dividerLen) },
             { 4, new SendPackageView(orderService) },
-            { 5, new FilterPackagesView(orderService, dividerLen) }
+            { 5, new FilterPackagesView(orderService, dividerLen) },
+            { 6, new CloserView(orderService) },
         };
 
         while (true)
@@ -30,11 +31,12 @@ class Program
             Console.WriteLine("3. View orders");
             Console.WriteLine("4. Send package");
             Console.WriteLine("5. Find package");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("6. Close package");
+            Console.WriteLine("7. Exit");
 
             int choice = InputService.GetIntInput("Choose option: ");
 
-            if (choice == 6)
+            if (choice == 7)
             {
                 break;
             }

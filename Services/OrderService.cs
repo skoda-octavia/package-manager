@@ -130,5 +130,22 @@ namespace package_manager.Services
 
             return query.ToList();
         }
+
+        public string CloseOrder(Order order)
+        {
+            string answer;
+            if (order.OrderStatus.Id == OrderStatusEnum.Sent)
+            {
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Closed);
+                appDbContext.Orders.Update(order);
+                appDbContext.SaveChangesAsync();
+                answer = "Order closed.";
+            }
+            else
+            {
+                answer = "Order not sent.";
+            }
+            return answer;
+        }
     }
 }
