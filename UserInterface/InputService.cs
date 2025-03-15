@@ -85,19 +85,18 @@ namespace package_manager.UserInterface
             CustomerTypeEnum customerType = InputService.GetEnumInput<CustomerTypeEnum>("Client type: ");
             PaymentMethodEnum paymentMethod = InputService.GetEnumInput<PaymentMethodEnum>("Payment method: ");
             DeliveryMethodEnum delivery = InputService.GetEnumInput<DeliveryMethodEnum>("Delivery method: ");
-            string address = InputService.GetInput("Delivery address: ");
+            string? address = InputService.GetFilterValue("Delivery address: ");
 
-            return new Order()
-            {
-                CustomerType = new CustomerType(customerType),
-                PaymentMethod = new PaymentMethod(paymentMethod),
-                ProductName = productName,
-                Price = total,
-                DeliveryAddr = address,
-                OrderDate = DateTime.Now,
-                DeliveryMethod = new DeliveryMethod(delivery),
-                OrderStatus = new OrderStatus(OrderStatusEnum.New)
-            };
+            return new Order(
+                new CustomerType(customerType),
+                new DeliveryMethod(delivery),
+                new OrderStatus(OrderStatusEnum.New),
+                new PaymentMethod(paymentMethod),
+                total,
+                productName,
+                address,
+                DateTime.Now
+                );
         }
 
         public static string? GetFilterValue(string prompt)

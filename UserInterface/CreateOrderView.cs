@@ -20,7 +20,7 @@ namespace package_manager.UserInterface
             bool confirmed = InputService.GetInputBool("Do You want to save package?: ");
             if (confirmed)
             {
-                orderService.SaveOrder(order);
+                Console.WriteLine(orderService.SaveOrder(order));
             }
         }
 

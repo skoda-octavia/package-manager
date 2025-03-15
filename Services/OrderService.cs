@@ -37,11 +37,22 @@ namespace package_manager.Services
         }
 
 
-        public void SaveOrder(Order order)
+        public string SaveOrder(Order order)
         {
+            string answer;
+            if (order.DeliveryAddr == null)
+            {
+                order.OrderStatus = new OrderStatus(OrderStatusEnum.Invalid);
+                answer = "No address given, order marked as invalid.";
+            }
+            else
+            {
+                answer = "Order saved";
+            }
             AttachEnumInstances(order);
             appDbContext.Orders.Add(order);
             appDbContext.SaveChangesAsync();
+            return answer;
         }
 
         public List<Order> GetOrders()
@@ -111,7 +122,7 @@ namespace package_manager.Services
             IQueryable<Order> query = appDbContext.Orders;
 
             if (!string.IsNullOrEmpty(productName)) { query = query.Where(o => o.ProductName.Contains(productName)); }
-            if (orderDate.HasValue) { query = query.Where(o => o.OrderDate.Value.Date == orderDate.Value.Date); }
+            if (orderDate.HasValue) { query = query.Where(o => o.OrderDate.Date == orderDate.Value.Date); }
             if (price.HasValue) { query = query.Where(o => o.Price == price.Value); }
             if (orderId.HasValue) { query = query.Where(o => o.Id == orderId.Value); }
             if (status.HasValue) { query = query.Where(o => o.OrderStatus.Id == status.Value); }

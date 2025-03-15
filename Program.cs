@@ -23,13 +23,6 @@ class Program
             { 5, new FilterPackagesView(orderService, dividerLen) }
         };
 
-        Console.WriteLine($"Database path: {db.DbPath}.");
-
-        foreach (var e in db.OrderStatuses)
-        {
-            Console.WriteLine(e.Name);
-        }
-
         while (true)
         {
             Console.WriteLine("1. Create order");
