@@ -28,6 +28,25 @@ namespace package_manager.Data
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
 
+        private void SetEagerLoading(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+                .Navigation(o => o.CustomerType)
+                .AutoInclude();
+
+            modelBuilder.Entity<Order>()
+                .Navigation(o => o.DeliveryMethod)
+                .AutoInclude();
+
+            modelBuilder.Entity<Order>()
+                .Navigation(o => o.OrderStatus)
+                .AutoInclude();
+
+            modelBuilder.Entity<Order>()
+                .Navigation(o => o.PaymentMethod)
+                .AutoInclude();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //TODO refactoring 
@@ -63,6 +82,9 @@ namespace package_manager.Data
             {
                 modelBuilder.Entity<PaymentMethod>().HasData(new PaymentMethod (e));
             }
+
+            SetEagerLoading(modelBuilder);
+
         }
     }
 }

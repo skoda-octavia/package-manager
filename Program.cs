@@ -17,6 +17,7 @@ class Program
         var handlers = new Dictionary<int, CommandHandler>
         {
             { 1, new CreateOrderView(orderService) },
+            { 2, new StoreView(orderService) },
             { 3, new OrdersViewer(orderService, dividerLen) }
         };
         Console.WriteLine("Hello, World!");

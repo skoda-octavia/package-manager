@@ -30,6 +30,7 @@ namespace package_manager.Models
 
         public void PrintExtendedDetails()
         {
+            Console.WriteLine("Id: " + Id);
             PrintDetails();
             Console.WriteLine("Order date: " + OrderDate.ToString());
             Console.WriteLine("Order status: " + OrderStatus?.Name);

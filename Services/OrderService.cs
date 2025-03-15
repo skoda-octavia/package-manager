@@ -13,6 +13,8 @@ namespace package_manager.Services
     {
         private AppDbContext appDbContext;
 
+        private decimal MaxCashPayment = 2500;
+
         public OrderService(AppDbContext appDbContext) 
         {
             this.appDbContext = appDbContext;
@@ -37,11 +39,30 @@ namespace package_manager.Services
         public List<Order> GetOrders()
         {
             return appDbContext.Orders
-                .Include(o => o.CustomerType)
-                .Include(o => o.DeliveryMethod)
-                .Include(o => o.OrderStatus)
-                .Include(o => o.PaymentMethod)
                 .ToList();
+        }
+
+        public Order? GetOrderById(int id)
+        {
+            return appDbContext.Orders.FirstOrDefault(o => o.Id == id);
+        }
+
+        public string StoreOrder(Order order)
+        {
+            string answer;
+            if (order.Price >= MaxCashPayment && order.PaymentMethod.Id == PaymentMethodEnum.Cash)
+            {
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Returned);
+                answer = "Package returned to client.";
+            }
+            else
+            {
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.InStock);
+                answer = "Package in stock";
+            }
+            appDbContext.Orders.Update(order);
+            appDbContext.SaveChangesAsync();
+            return answer;
         }
     }
 }
