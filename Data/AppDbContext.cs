@@ -46,22 +46,22 @@ namespace package_manager.Data
 
             foreach (var e in Enum.GetValues(typeof(CustomerTypeEnum)).Cast<CustomerTypeEnum>())
             {
-                modelBuilder.Entity<CustomerType>().HasData(new CustomerType { Id = e, Name = e.ToString()});
+                modelBuilder.Entity<CustomerType>().HasData(new CustomerType(e));
             }
 
             foreach (var e in Enum.GetValues(typeof(DeliveryMethodEnum)).Cast<DeliveryMethodEnum>())
             {
-                modelBuilder.Entity<DeliveryMethod>().HasData(new DeliveryMethod { Id = e, Name = e.ToString() });
+                modelBuilder.Entity<DeliveryMethod>().HasData(new DeliveryMethod (e));
             }
 
             foreach (var e in Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>())
             {
-                modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus { Id = e, Name = e.ToString() });
+                modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus (e));
             }
 
             foreach (var e in Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>())
             {
-                modelBuilder.Entity<PaymentMethod>().HasData(new PaymentMethod { Id = e, Name = e.ToString() });
+                modelBuilder.Entity<PaymentMethod>().HasData(new PaymentMethod (e));
             }
         }
     }

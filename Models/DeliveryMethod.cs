@@ -15,6 +15,12 @@ namespace package_manager.Models
     public class DeliveryMethod
     {
 
+        public DeliveryMethod(DeliveryMethodEnum id)
+        {
+            Id = id;
+            Name = id.ToString();
+        }
+        public DeliveryMethod() { }
         public DeliveryMethodEnum Id { get; set; }
         public string? Name { get; set; }
     }

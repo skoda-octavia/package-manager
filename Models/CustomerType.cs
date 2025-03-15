@@ -14,6 +14,12 @@ namespace package_manager.Models
 
     public class CustomerType
     {
+        public CustomerType(CustomerTypeEnum type)
+        {
+            Id = type;
+            Name = type.ToString();
+        }
+        public CustomerType() { }
         public CustomerTypeEnum Id { get; set; }
         public string? Name { get; set; }
     }

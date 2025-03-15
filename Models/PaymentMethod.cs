@@ -15,6 +15,13 @@ namespace package_manager.Models
 
     public class PaymentMethod
     {
+        public PaymentMethod(PaymentMethodEnum enumValue)
+        {
+            Id = enumValue;
+            Name = enumValue.ToString();
+        }
+
+        public PaymentMethod() { }
 
         public PaymentMethodEnum Id { get; set; }
         public string? Name { get; set; }

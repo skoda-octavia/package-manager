@@ -18,6 +18,13 @@ namespace package_manager.Models
 
     public class OrderStatus
     {
+        public OrderStatus(OrderStatusEnum status)
+        {
+            Id = status;
+            Name = status.ToString();
+        }
+
+        public OrderStatus() { }
         public OrderStatusEnum Id { get; set; }
         public string? Name { get; set; }
     }
