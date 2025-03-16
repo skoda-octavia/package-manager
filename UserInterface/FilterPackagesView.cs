@@ -8,13 +8,9 @@ using System.Threading.Tasks;
 
 namespace package_manager.UserInterface
 {
-    public class FilterPackagesView : CommandHandler
+    public class FilterPackagesView : OrdersWriter
     {
-        private readonly string Divider;
-        public FilterPackagesView(OrderService orderService, int dividerLen) : base(orderService) 
-        {
-            Divider = new string('-', dividerLen);
-        }
+        public FilterPackagesView(OrderService orderService, int dividerLen) : base(orderService, dividerLen) { }
         public override void HandleCommand()
         {
             Console.WriteLine("Filter Orders:");
@@ -33,13 +29,7 @@ namespace package_manager.UserInterface
                 orderId,
                 status,
                 paymentMethod);
-
-            Console.WriteLine("Found orders: " + orders.Count);
-            foreach (var order in orders)
-            {
-                Console.WriteLine(Divider);
-                order.PrintExtendedDetails();
-            }
+            PrintOrdersExtended(orders);
         }
     }
 }

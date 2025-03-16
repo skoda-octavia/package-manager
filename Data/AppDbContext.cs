@@ -14,9 +14,8 @@ namespace package_manager.Data
 
         public AppDbContext()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "packagedb.db");
+            var folder = AppDomain.CurrentDomain.BaseDirectory;
+            DbPath = System.IO.Path.Combine(folder, "packagedb.db");
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");

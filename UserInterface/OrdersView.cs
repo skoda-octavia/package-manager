@@ -11,24 +11,13 @@ using System.Transactions;
 
 namespace package_manager.UserInterface
 {
-    public class OrdersViewer : CommandHandler
+    public class OrdersView : OrdersWriter
     {
-        private readonly string Divider;
-
-        public OrdersViewer(OrderService orderService, int dividerLen) : base(orderService)
-        {
-            this.Divider = new string('-', dividerLen);
-        }
-
+        public OrdersView(OrderService orderService, int dividerLen) : base(orderService, dividerLen) { }
         public override void HandleCommand()
         {
             List<Order> orders = orderService.GetOrders();
-            foreach (var item in orders)
-            {
-                Console.WriteLine(Divider);
-                item.PrintExtendedDetails();
-            }
+            PrintOrdersExtended(orders);
         }
-
     }
 }
