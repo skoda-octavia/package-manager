@@ -14,13 +14,14 @@ namespace package_manager.Services
     {
         private AppDbContext appDbContext;
 
-        private decimal MaxCashPayment = 2500;
+        private readonly decimal maxCashPayment;
 
         private Dictionary<DeliveryMethodEnum, DeliveryService> deliveryServices;
 
-        public OrderService(AppDbContext appDbContext)
+        public OrderService(AppDbContext appDbContext, decimal maxCashPaymant)
         {
             this.appDbContext = appDbContext;
+            this.maxCashPayment = maxCashPaymant;
             deliveryServices = new Dictionary<DeliveryMethodEnum, DeliveryService>
             {
                 {DeliveryMethodEnum.HomeDelivery, new HomeDeliveryService(this) },
@@ -30,10 +31,10 @@ namespace package_manager.Services
 
         private void AttachEnumInstances(Order order)
         {
-            order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == order.OrderStatus.Id);
-            order.PaymentMethod = appDbContext.PaymentMethods.FirstOrDefault(c => c.Id == order.PaymentMethod.Id);
-            order.CustomerType = appDbContext.CustomerTypes.FirstOrDefault(c => c.Id == order.CustomerType.Id);
-            order.DeliveryMethod = appDbContext.DeliveryMethods.FirstOrDefault(c => c.Id == order.DeliveryMethod.Id);
+            order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == order.OrderStatus.Id) ?? new OrderStatus(OrderStatusEnum.New);
+            order.PaymentMethod = appDbContext.PaymentMethods.FirstOrDefault(c => c.Id == order.PaymentMethod.Id) ?? new PaymentMethod(PaymentMethodEnum.Card);
+            order.CustomerType = appDbContext.CustomerTypes.FirstOrDefault(c => c.Id == order.CustomerType.Id) ?? new CustomerType(CustomerTypeEnum.Company);
+            order.DeliveryMethod = appDbContext.DeliveryMethods.FirstOrDefault(c => c.Id == order.DeliveryMethod.Id) ?? new DeliveryMethod(DeliveryMethodEnum.Locker);
         }
 
 
@@ -69,14 +70,14 @@ namespace package_manager.Services
         public string StoreOrder(Order order)
         {
             string answer;
-            if (order.Price >= MaxCashPayment && order.PaymentMethod.Id == PaymentMethodEnum.Cash)
+            if (order.Price >= maxCashPayment && order.PaymentMethod.Id == PaymentMethodEnum.Cash)
             {
-                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Returned);
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Returned) ?? new OrderStatus(OrderStatusEnum.Returned);
                 answer = "Package returned to client.";
             }
             else
             {
-                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.InStock);
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.InStock) ?? new OrderStatus(OrderStatusEnum.InStock);
                 answer = "Package in stock";
             }
             appDbContext.Orders.Update(order);
@@ -106,7 +107,7 @@ namespace package_manager.Services
 
         public void MarkSent(Order order)
         {
-            order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Sent);
+            order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Sent) ?? new OrderStatus(OrderStatusEnum.Sent);
             appDbContext.Orders.Update(order);
             appDbContext.SaveChangesAsync();
         }
@@ -136,7 +137,7 @@ namespace package_manager.Services
             string answer;
             if (order.OrderStatus.Id == OrderStatusEnum.Sent)
             {
-                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Closed);
+                order.OrderStatus = appDbContext.OrderStatuses.FirstOrDefault(c => c.Id == OrderStatusEnum.Closed) ?? new OrderStatus(OrderStatusEnum.Closed);
                 appDbContext.Orders.Update(order);
                 appDbContext.SaveChangesAsync();
                 answer = "Order closed.";

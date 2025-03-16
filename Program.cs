@@ -8,17 +8,18 @@ class Program
 {
     static void Main()
     {
-
-        using var db = new AppDbContext();
-        OrderService orderService = new OrderService(db);
         const int dividerLen = 20;
+        const decimal maxCashPayment = 2500;
+        using var db = new AppDbContext();
+        OrderService orderService = new OrderService(db, maxCashPayment);
+        
         string commandDivider = new string('*', dividerLen);
 
         var handlers = new Dictionary<int, CommandHandler>
         {
             { 1, new CreateOrderView(orderService) },
             { 2, new StoreView(orderService) },
-            { 3, new OrdersViewer(orderService, dividerLen) },
+            { 3, new OrdersView(orderService, dividerLen) },
             { 4, new SendPackageView(orderService) },
             { 5, new FilterPackagesView(orderService, dividerLen) },
             { 6, new CloserView(orderService) },
@@ -51,7 +52,5 @@ class Program
             }
             Console.WriteLine(commandDivider);
         }
-
-
     }
 }
