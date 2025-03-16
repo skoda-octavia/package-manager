@@ -47,41 +47,24 @@ namespace package_manager.Data
                 .AutoInclude();
         }
 
+        private void SeedEnumData<TEnum, TEntity>(ModelBuilder modelBuilder)
+            where TEnum : Enum
+            where TEntity : class
+        {
+            var entities = Enum.GetValues(typeof(TEnum))
+                .Cast<TEnum>()
+                .Select(e => Activator.CreateInstance(typeof(TEntity), e))
+                .ToArray();
+
+            modelBuilder.Entity<TEntity>().HasData(entities);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //TODO refactoring 
-            //var enumMappings = new List<(Type EnumType, Type EntityType)>
-            //{
-            //    (typeof(OrderStatusEnum), typeof(OrderStatus)),
-            //    (typeof(PaymentMethodEnum), typeof(PaymentMethod)),
-            //    (typeof(CustomerTypeEnum), typeof(CustomerType)),
-            //    (typeof(DeliveryMethodEnum), typeof(DeliveryMethod))
-            //};
-
-            //foreach (var (enumType, entityType) in enumMappings)
-            //{
-            //    SeedEnumData(modelBuilder, enumType, entityType);
-            //}
-
-            foreach (var e in Enum.GetValues(typeof(CustomerTypeEnum)).Cast<CustomerTypeEnum>())
-            {
-                modelBuilder.Entity<CustomerType>().HasData(new CustomerType(e));
-            }
-
-            foreach (var e in Enum.GetValues(typeof(DeliveryMethodEnum)).Cast<DeliveryMethodEnum>())
-            {
-                modelBuilder.Entity<DeliveryMethod>().HasData(new DeliveryMethod (e));
-            }
-
-            foreach (var e in Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>())
-            {
-                modelBuilder.Entity<OrderStatus>().HasData(new OrderStatus (e));
-            }
-
-            foreach (var e in Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>())
-            {
-                modelBuilder.Entity<PaymentMethod>().HasData(new PaymentMethod (e));
-            }
+            SeedEnumData<CustomerTypeEnum, CustomerType>(modelBuilder);
+            SeedEnumData<DeliveryMethodEnum, DeliveryMethod>(modelBuilder);
+            SeedEnumData<OrderStatusEnum, OrderStatus>(modelBuilder);
+            SeedEnumData<PaymentMethodEnum, PaymentMethod>(modelBuilder);
 
             SetEagerLoading(modelBuilder);
 
